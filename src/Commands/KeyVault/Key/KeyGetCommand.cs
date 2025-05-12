@@ -3,7 +3,6 @@
 
 using System.CommandLine;
 using System.CommandLine.Parsing;
-using Azure.Security.KeyVault.Keys;
 using AzureMcp.Arguments.KeyVault.Key;
 using AzureMcp.Models.Argument;
 using AzureMcp.Models.Command;
