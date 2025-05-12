@@ -4,6 +4,8 @@
 
 ### Features Added
 
+- Support for getting secrets from Key Vault.
+
 ### Breaking Changes
 
 ### Bugs Fixed

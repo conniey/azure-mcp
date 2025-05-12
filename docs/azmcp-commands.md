@@ -188,6 +188,9 @@ azmcp keyvault key get --subscription <subscription> --vault <vault-name> --key 
 
 # Create a key in vault
 azmcp keyvault key create --subscription <subscription> --vault <vault-name> --key <key-name> --key-type <key-type>
+
+# Gets a secret in vault
+azmcp keyvault secret get --subscription <subscription> --vault <vault-name> --secret-name <secret-name>
 ```
 
 ### Azure Service Bus Operations
