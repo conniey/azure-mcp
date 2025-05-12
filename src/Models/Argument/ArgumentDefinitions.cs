@@ -417,6 +417,7 @@ public static class ArgumentDefinitions
         public const string KeyNameParam = "key";
         public const string KeyTypeParam = "key-type";
         public const string SecretNameParam = "secret-name";
+        public const string SecretValueParam = "secret-value";
 
         public static readonly ArgumentDefinition<string> VaultName = new(
             VaultNameParam,
@@ -435,7 +436,12 @@ public static class ArgumentDefinitions
 
         public static readonly ArgumentDefinition<string> SecretName = new(
             SecretNameParam,
-            "Name of the secret to retrieve from the Key Vault.",
+            "Name of the secret to retrieve from or add to the Key Vault.",
+            required: true);
+    
+        public static readonly ArgumentDefinition<string> SecretValue = new(
+            SecretValueParam,
+            "The value of the secret to add to the Key Vault.",
             required: true);
     }
 

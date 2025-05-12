@@ -11,6 +11,7 @@ namespace AzureMcp.Commands.KeyVault;
 [JsonSerializable(typeof(KeyGetCommand.KeyGetCommandResult))]
 [JsonSerializable(typeof(KeyCreateCommand.KeyCreateCommandResult))]
 [JsonSerializable(typeof(SecretGetCommand.SecretGetCommandResult))]
+[JsonSerializable(typeof(SecretCreateCommand.SecretCreateCommandResult))]
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
 internal sealed partial class KeyVaultJsonContext : JsonSerializerContext
 {

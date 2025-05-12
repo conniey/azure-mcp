@@ -32,11 +32,11 @@ public sealed class SecretGetCommand : SubscriptionCommand<SecretGetArguments>
     protected override void RegisterArguments()
     {
         base.RegisterArguments();
-        AddArgument(CreateVaultArgument());
+        AddArgument(CreateVaultNameArgument());
         AddArgument(CreateSecretNameArgument());
     }
 
-    private static ArgumentBuilder<SecretGetArguments> CreateVaultArgument() =>
+    private static ArgumentBuilder<SecretGetArguments> CreateVaultNameArgument() =>
         ArgumentBuilder<SecretGetArguments>
             .Create(ArgumentDefinitions.KeyVault.VaultName.Name, ArgumentDefinitions.KeyVault.VaultName.Description)
             .WithValueAccessor(args => args.VaultName ?? string.Empty)
