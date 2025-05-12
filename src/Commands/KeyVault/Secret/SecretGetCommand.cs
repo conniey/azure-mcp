@@ -70,10 +70,10 @@ public sealed class SecretGetCommand : SubscriptionCommand<SecretGetArguments>
             var secretValue = await service.GetSecret(
                 args.SecretName!,
                 args.Subscription!,
-                args.Tenant);
+                args.Tenant!);
 
             context.Response.Results = ResponseResult.Create(
-                new SecretGetCommandResult(args.SecretName!, secretValue),
+                new SecretGetCommandResult(secretValue.Name, secretValue.Value),
                 KeyVaultJsonContext.Default.SecretGetCommandResult);
         }
         catch (Exception ex)
@@ -84,5 +84,5 @@ public sealed class SecretGetCommand : SubscriptionCommand<SecretGetArguments>
         return context.Response;
     }
 
-    internal record SecretGetCommandResult(string SecretName, string? SecretValue);
+    internal record SecretGetCommandResult(string SecretName, string SecretValue);
 }

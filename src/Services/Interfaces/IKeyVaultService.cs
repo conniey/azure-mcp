@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using Azure.Security.KeyVault.Keys;
+using Azure.Security.KeyVault.Secrets;
 using AzureMcp.Arguments;
 
 namespace AzureMcp.Services.Interfaces;
@@ -59,9 +60,14 @@ public interface IKeyVaultService
     /// <summary>
     /// Retrieves the value of a secret from Azure Key Vault.
     /// </summary>
+    /// <param name="vaultName">The name of the Key Vault</param>
     /// <param name="secretName">The name of the secret to retrieve.</param>
     /// <param name="subscription">The subscription ID or name.</param>
     /// <param name="tenantId">Optional tenant ID for cross-tenant operations.</param>
     /// <returns>The value of the secret.</returns>
-    Task<string> GetSecret(string secretName, string subscription, string? tenantId = null);
+    Task<KeyVaultSecret> GetSecret(
+        string vaultName,
+        string secretName,
+        string subscription,
+        string? tenantId = null);
 }
