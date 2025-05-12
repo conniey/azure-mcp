@@ -62,12 +62,28 @@ public interface IKeyVaultService
     /// </summary>
     /// <param name="vaultName">The name of the Key Vault</param>
     /// <param name="secretName">The name of the secret to retrieve.</param>
-    /// <param name="subscription">The subscription ID or name.</param>
+    /// <param name="subscriptionId">The subscription ID or name.</param>
     /// <param name="tenantId">Optional tenant ID for cross-tenant operations.</param>
     /// <returns>The value of the secret.</returns>
     Task<KeyVaultSecret> GetSecret(
         string vaultName,
         string secretName,
-        string subscription,
+        string subscriptionId,
+        string? tenantId = null);
+
+    /// <summary>
+    /// Creates a secret in the Azure Key Vault.
+    /// </summary>
+    /// <param name="vaultName">The name of the Key Vault</param>
+    /// <param name="secretName">The name of the secret to create.</param>
+    /// <param name="secretValue">The value of the secret to create.</param>
+    /// <param name="subscriptionId">The subscription ID or name.</param>
+    /// <param name="tenantId">Optional tenant ID for cross-tenant operations.</param>
+    /// <returns>The value of the secret.</returns>
+    Task<KeyVaultSecret> CreateSecret(
+        string vaultName,
+        string secretName,
+        string secretValue,
+        string subscriptionId,
         string? tenantId = null);
 }

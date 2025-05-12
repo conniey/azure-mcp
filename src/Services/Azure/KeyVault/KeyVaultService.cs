@@ -115,4 +115,28 @@ public sealed class KeyVaultService : BaseAzureService, IKeyVaultService
             throw new Exception($"Error retrieving secret '{secretName}': {ex.Message}", ex);
         }
     }
+
+    public async Task<KeyVaultSecret> CreateSecret(
+        string vaultName,
+        string secretName,
+        string secretValue,
+        string subscriptionId,
+        string? tenantId = null)
+    {
+        ValidateRequiredParameters(vaultName, subscriptionId);
+
+        var credential = await GetCredential(tenantId);
+        var client = new SecretClient(
+            new Uri($"https://{vaultName}.vault.azure.net/"), credential);
+
+        try
+        {
+            var secret = new KeyVaultSecret(secretName, secretValue);
+            return await client.SetSecretAsync(secret);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Error setting secret '{secretName}': {ex.Message}", ex);
+        }
+    }
 }
