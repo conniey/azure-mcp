@@ -4,7 +4,7 @@
 
 ### Features Added
 
-- Support for getting secrets from Key Vault.
+- Support for getting and creating secrets from Key Vault.
 
 ### Breaking Changes
 
