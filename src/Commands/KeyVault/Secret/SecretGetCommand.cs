@@ -29,14 +29,13 @@ public sealed class SecretGetCommand : SubscriptionCommand<SecretGetArguments>
         base.RegisterOptions(command);
         command.AddOption(_secretNameOption);
     }
-
     protected override void RegisterArguments()
     {
         base.RegisterArguments();
         AddArgument(CreateVaultArgument());
         AddArgument(CreateSecretNameArgument());
     }
-    
+
     private static ArgumentBuilder<SecretGetArguments> CreateVaultArgument() =>
         ArgumentBuilder<SecretGetArguments>
             .Create(ArgumentDefinitions.KeyVault.VaultName.Name, ArgumentDefinitions.KeyVault.VaultName.Description)
@@ -85,5 +84,5 @@ public sealed class SecretGetCommand : SubscriptionCommand<SecretGetArguments>
         return context.Response;
     }
 
-    internal record SecretGetCommandResult(string SecretName,  string? SecretValue);
+    internal record SecretGetCommandResult(string SecretName, string? SecretValue);
 }

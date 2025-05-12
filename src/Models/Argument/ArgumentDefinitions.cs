@@ -432,9 +432,10 @@ public static class ArgumentDefinitions
             KeyTypeParam,
             "The type of key to create (RSA, EC).",
             required: true);
-    
+
         public static readonly ArgumentDefinition<string> SecretName = new(
-            SecretNameParam, "Name of the secret to retrieve from the Key Vault.", 
+            SecretNameParam,
+            "Name of the secret to retrieve from the Key Vault.",
             required: true);
     }
 
