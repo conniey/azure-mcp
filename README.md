@@ -86,7 +86,7 @@ The Azure MCP Server provides tools for interacting with the following Azure ser
 - List Log Analytics workspaces
 - Query logs using KQL
 - List available tables
-- Configure monitoring options
+- Configure monitoring optionsqw
 
 ### ⚙️ Azure App Configuration
 - List App Configuration stores
@@ -96,7 +96,7 @@ The Azure MCP Server provides tools for interacting with the following Azure ser
 
 ### 🔑 Azure Key Vault
 - List, create, and get keys
-- Get secrets
+- Get and create secrets
 
 ### 📦 Azure Resource Groups
 - List resource groups

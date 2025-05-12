@@ -26,7 +26,7 @@ public sealed class KeyListCommand(ILogger<KeyListCommand> logger) : Subscriptio
 
         Required arguments:
         - subscription
-        - vault
+        - vault-name
         """;
 
     protected override void RegisterOptions(Command command)

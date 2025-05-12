@@ -9,6 +9,7 @@ namespace AzureMcp.Commands.KeyVault.Secret;
 
 public sealed class SecretGetCommand : SubscriptionCommand<SecretGetArguments>
 {
+    private readonly Option<string> _vaultOption = ArgumentDefinitions.KeyVault.VaultName.ToOption();
     private readonly Option<string> _secretNameOption = ArgumentDefinitions.KeyVault.SecretName.ToOption();
 
     protected override string GetCommandName() => "get";
@@ -20,14 +21,15 @@ public sealed class SecretGetCommand : SubscriptionCommand<SecretGetArguments>
 
         Required arguments:
         - subscription
-        - vault
-        - key
+        - vault-name
+        - secret-name
         """;
 
     protected override void RegisterOptions(Command command)
     {
         base.RegisterOptions(command);
         command.AddOption(_secretNameOption);
+        command.AddOption(_vaultOption);
     }
     protected override void RegisterArguments()
     {

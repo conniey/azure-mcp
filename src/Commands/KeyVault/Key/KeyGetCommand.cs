@@ -27,8 +27,8 @@ public sealed class KeyGetCommand(ILogger<KeyGetCommand> logger) : SubscriptionC
 
         Required arguments:
         - subscription
-        - vault
-        - key
+        - vault-name
+        - key-name
         """;
 
     protected override void RegisterOptions(Command command)
