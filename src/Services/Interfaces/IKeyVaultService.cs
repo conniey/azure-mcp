@@ -55,4 +55,13 @@ public interface IKeyVaultService
         string subscriptionId,
         string? tenantId = null,
         RetryPolicyArguments? retryPolicy = null);
+
+    /// <summary>
+    /// Retrieves the value of a secret from Azure Key Vault.
+    /// </summary>
+    /// <param name="secretName">The name of the secret to retrieve.</param>
+    /// <param name="subscription">The subscription ID or name.</param>
+    /// <param name="tenantId">Optional tenant ID for cross-tenant operations.</param>
+    /// <returns>The value of the secret.</returns>
+    Task<string> GetSecret(string secretName, string subscription, string? tenantId = null);
 }

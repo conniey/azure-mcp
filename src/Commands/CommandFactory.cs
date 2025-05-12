@@ -288,6 +288,9 @@ public class CommandFactory
         keys.AddCommand("list", new KeyVault.Key.KeyListCommand(GetLogger<KeyVault.Key.KeyListCommand>()));
         keys.AddCommand("get", new KeyVault.Key.KeyGetCommand(GetLogger<KeyVault.Key.KeyGetCommand>()));
         keys.AddCommand("create", new KeyVault.Key.KeyCreateCommand(GetLogger<KeyVault.Key.KeyCreateCommand>()));
+
+        var secrets = new CommandGroup("secret", "Key Vault secret operations - Commands for managing and accessing secrets in Azure Key Vault.");
+        secrets.AddCommand("get", new KeyVault.Secret.SecretGetCommand());
     }
 
     private void RegisterToolsCommands()

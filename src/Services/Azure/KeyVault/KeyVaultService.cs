@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using Azure.Security.KeyVault.Keys;
+using Azure.Security.KeyVault.Secrets;
 using AzureMcp.Arguments;
 using AzureMcp.Services.Interfaces;
 
@@ -94,6 +95,24 @@ public sealed class KeyVaultService : BaseAzureService, IKeyVaultService
         catch (Exception ex)
         {
             throw new Exception($"Error creating key '{keyName}' in vault {vaultName}: {ex.Message}", ex);
+        }
+    }
+
+    public async Task<KeyVaultSecret> GetSecret(string vaultName, string secretName, string subscriptionId, string? tenantId = null)
+    {
+        ValidateRequiredParameters(vaultName, subscriptionId);
+
+        var credential = await GetCredential(tenantId);
+        var client = new SecretClient(
+            new Uri($"https://{vaultName}.vault.azure.net/"), credential);
+
+        try
+        {
+            return await client.GetSecretAsync(secretName);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Error retrieving secret '{secretName}': {ex.Message}", ex);
         }
     }
 }

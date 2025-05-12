@@ -414,7 +414,7 @@ public static class ArgumentDefinitions
     public static class KeyVault
     {
         public const string VaultNameParam = "vault";
-        public const string KeyNameParam = "key-name";
+        public const string KeyNameParam = "key";
         public const string KeyTypeParam = "key-type";
         public const string SecretNameParam = "secret-name";
 
