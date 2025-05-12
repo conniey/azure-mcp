@@ -290,7 +290,7 @@ public class CommandFactory
         var secrets = new CommandGroup("secret", "Key Vault secret operations - Commands for managing and accessing secrets in Azure Key Vault.");
         secrets.AddCommand("get", new KeyVault.Secret.SecretGetCommand());
         secrets.AddCommand("create", new KeyVault.Secret.SecretCreateCommand(GetLogger<KeyVault.Secret.SecretCreateCommand>()));
-        
+
         keyVault.AddSubGroup(keys);
         keyVault.AddSubGroup(secrets);
     }

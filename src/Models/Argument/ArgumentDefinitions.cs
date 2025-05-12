@@ -438,7 +438,7 @@ public static class ArgumentDefinitions
             SecretNameParam,
             "Name of the secret to retrieve from or add to the Key Vault.",
             required: true);
-    
+
         public static readonly ArgumentDefinition<string> SecretValue = new(
             SecretValueParam,
             "The value of the secret to add to the Key Vault.",
