@@ -51,7 +51,8 @@
     <PackageReference Include="Azure.ResourceManager.AppConfiguration" />
     <PackageReference Include="Azure.ResourceManager.Kusto" />  
     <PackageReference Include="Azure.ResourceManager.PostgreSql" />    
-    <PackageReference Include="Azure.Security.KeyVault.Keys" />
+    <PackageReference Include="Azure.Security.KeyVault.Keys" />    
+    <PackageReference Include="Azure.Security.KeyVault.Secrets" />
     <PackageReference Include="Azure.Storage.Blobs" />
     <PackageReference Include="Azure.ResourceManager.CosmosDB" />
     <PackageReference Include="Azure.ResourceManager.OperationalInsights" />
