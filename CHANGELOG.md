@@ -8,7 +8,7 @@
 
 ### Bugs Fixed
 
-- Fixed failure starting Docker image.
+- Fixed failure starting Docker image. https://github.com/Azure/azure-mcp/pull/301
 
 ### Other Changes
 
