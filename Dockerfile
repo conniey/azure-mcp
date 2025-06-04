@@ -1,4 +1,5 @@
 # Use the official .NET SDK image as the build image
+# Verify the SDK and runtime versions match the ones in global.json
 FROM mcr.microsoft.com/dotnet/sdk:9.0.300-bookworm-slim AS build
 WORKDIR /src
 
