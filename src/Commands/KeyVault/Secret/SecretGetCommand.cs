@@ -1,11 +1,11 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Microsoft.Extensions.Logging;
+using AzureMcp.Commands.Subscription;
+using AzureMcp.Models.Option;
 using AzureMcp.Options.KeyVault.Secret;
 using AzureMcp.Services.Interfaces;
-using AzureMcp.Models.Option;
-using AzureMcp.Commands.Subscription;
+using Microsoft.Extensions.Logging;
 
 namespace AzureMcp.Commands.KeyVault.Secret;
 
