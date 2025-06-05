@@ -83,13 +83,13 @@ public class CommandFactory
         // Register top-level command groups
         RegisterBestPracticesCommand();
         RegisterCosmosCommands();
+        RegisterKeyVaultCommands();
         RegisterKustoCommands();
         RegisterStorageCommands();
         RegisterMonitorCommands();
         RegisterAppConfigCommands();
         RegisterSearchCommands();
         RegisterPostgresCommands();
-        RegisterKeyVaultCommands();
         RegisterToolsCommands();
         RegisterExtensionCommands();
         RegisterSubscriptionCommands();
