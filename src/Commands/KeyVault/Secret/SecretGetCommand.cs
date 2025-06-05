@@ -9,12 +9,12 @@ using AzureMcp.Commands.Subscription;
 
 namespace AzureMcp.Commands.KeyVault.Secret;
 
-public sealed class SecretGetCommand(ILogger<SecretGetCommand> logger) : SubscriptionCommand<SecretGetOptions>
+public sealed class SecretGetCommand(ILogger<SecretGetCommand> logger, IKeyVaultService keyVaultService) : SubscriptionCommand<SecretGetOptions>
 {
     private const string _commandTitle = "Get Key Vault Secret";
     private readonly ILogger<SecretGetCommand> _logger = logger;
+    private readonly IKeyVaultService _keyVaultService = keyVaultService;
     private readonly Option<string> _vaultOption = OptionDefinitions.KeyVault.VaultName;
-
     private readonly Option<string> _secretOption = OptionDefinitions.KeyVault.SecretName;
 
     public override string Name => "get";
@@ -50,30 +50,29 @@ public sealed class SecretGetCommand(ILogger<SecretGetCommand> logger) : Subscri
     [McpServerTool(Destructive = false, ReadOnly = true, Title = _commandTitle)]
     public override async Task<CommandResponse> ExecuteAsync(CommandContext context, ParseResult parseResult)
     {
-        var args = BindOptions(parseResult);
+        var options = BindOptions(parseResult);
 
         try
         {
-            if (!await ProcessArguments(context, args))
+            if (!Validate(parseResult.CommandResult, context.Response).IsValid)
             {
                 return context.Response;
             }
 
-            var service = context.GetService<IKeyVaultService>();
-            var result = await service.GetSecret(
-                args.VaultName!,
-                args.SecretName!,
-                args.Subscription!,
-                args.Tenant,
-                args.RetryPolicy);
+            var result = await _keyVaultService.GetSecret(
+                options.VaultName!,
+                options.SecretName!,
+                options.Subscription!,
+                options.Tenant,
+                options.RetryPolicy);
 
             context.Response.Results = ResponseResult.Create(
-                new SecretGetCommandResult(args.SecretName!, result),
+                new SecretGetCommandResult(options.SecretName!, result),
                 KeyVaultJsonContext.Default.SecretGetCommandResult);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error getting secret {SecretName} from vault {VaultName}", args.SecretName, args.VaultName);
+            _logger.LogError(ex, "Error getting secret {SecretName} from vault {VaultName}", options.SecretName, options.VaultName);
             HandleException(context.Response, ex);
         }
 
