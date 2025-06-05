@@ -82,7 +82,7 @@ public class KeyVaultCommandTests(LiveTestFixture liveTestFixture, ITestOutputHe
     public async Task Should_get_secret()
     {
         // Created in keyvault.bicep.
-        var secretName = "foo-bar-secret-name";
+        var secretName = "foo-bar-secret";
         var result = await CallToolAsync(
             "azmcp-keyvault-secret-get",
             new()
