@@ -7,6 +7,7 @@ using System.Text.Json.Serialization;
 using AzureMcp.Commands.Server;
 using AzureMcp.Commands.Storage.Blob;
 using AzureMcp.Commands.Subscription;
+using AzureMcp.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -310,8 +311,9 @@ public class CommandFactory
         keys.AddCommand("list", new KeyVault.Key.KeyListCommand(GetLogger<KeyVault.Key.KeyListCommand>()));
         keys.AddCommand("get", new KeyVault.Key.KeyGetCommand(GetLogger<KeyVault.Key.KeyGetCommand>()));
         keys.AddCommand("create", new KeyVault.Key.KeyCreateCommand(GetLogger<KeyVault.Key.KeyCreateCommand>()));
-        
-        secrets.AddCommand("get", new KeyVault.Secrets.SecretsGetCommand(GetLogger<KeyVault.Secrets.SecretsGetCommand>()));
+
+        secrets.AddCommand("get", new KeyVault.Secret.SecretGetCommand(GetLogger<KeyVault.Secret.SecretGetCommand>(),
+            _serviceProvider.GetRequiredService<IKeyVaultService>()));
     }
 
     private void RegisterToolsCommands()
