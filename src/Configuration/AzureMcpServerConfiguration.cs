@@ -13,5 +13,7 @@ public class AzureMcpServerConfiguration
 
     public bool IsTelemetryEnabled { get; set; } = true;
 
+    public string AppInsightsInstrumentationKey { get; set; } = string.Empty;
+
     public string MacAddressHash { get; set; } = string.Empty;
 }

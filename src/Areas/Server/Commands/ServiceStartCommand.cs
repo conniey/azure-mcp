@@ -7,13 +7,14 @@ using AzureMcp.Areas.Server.Options;
 using AzureMcp.Commands;
 using AzureMcp.Commands.Server;
 using AzureMcp.Commands.Server.Tools;
+using AzureMcp.Configuration;
 using AzureMcp.Models.Option;
-using AzureMcp.Services.Telemetry;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using ModelContextProtocol.Protocol;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
@@ -121,23 +122,24 @@ public sealed class ServiceStartCommand : BaseCommand
         services.AddSingleton<ProxyToolOperations>();
         services.AddSingleton<IMcpClientService, McpClientService>();
 
-        var mcpServerOptionsBuilder = services.AddOptions<McpServerOptions>();
-        var serverName = entryAssembly?.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? DefaultServerName;
-
-        mcpServerOptionsBuilder.Configure<ITelemetryService>((mcpServerOptions, telemetryService) =>
-        {
-            mcpServerOptions.ProtocolVersion = "2024-11-05";
-            mcpServerOptions.ServerInfo = new Implementation
+        var mcpServerOptionsBuilder = services
+            .AddOptions<McpServerOptions>()
+            .Configure<IOptions<AzureMcpServerConfiguration>>((mcpServerOptions, telemetryConfig) =>
             {
-                Name = serverName,
-                Version = assemblyName?.Version?.ToString() ?? "1.0.0-beta"
-            };
+                var config = telemetryConfig.Value;
 
-            if (mcpServerOptions.Capabilities == null)
-            {
-                mcpServerOptions.Capabilities = new ServerCapabilities();
-            }
-        });
+                mcpServerOptions.ProtocolVersion = "2024-11-05";
+                mcpServerOptions.ServerInfo = new Implementation
+                {
+                    Name = config.Name,
+                    Version = config.Version
+                };
+
+                if (mcpServerOptions.Capabilities == null)
+                {
+                    mcpServerOptions.Capabilities = new ServerCapabilities();
+                }
+            });
 
         var serviceArray = options.Service;
 

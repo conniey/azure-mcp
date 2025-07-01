@@ -9,6 +9,7 @@ using AzureMcp.Configuration;
 using AzureMcp.Helpers;
 using AzureMcp.Services.Telemetry;
 using Microsoft.Extensions.Azure;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -22,11 +23,14 @@ namespace AzureMcp.Extensions;
 public static class OpenTelemetryExtensions
 {
     private const string DefaultAppInsights = "InstrumentationKey=21e003c0-efee-4d3f-8a98-1868515aa2c9;IngestionEndpoint=https://centralus-2.in.applicationinsights.azure.com/;LiveEndpoint=https://centralus.livediagnostics.monitor.azure.com/;ApplicationId=f14f6a2d-6405-4f88-bd58-056f25fe274f";
+    private const string AzureMcpCollectTelemetryKey = "AZURE_MCP_COLLECT_TELEMETRY";
+    private const string AppInsightsConnectionStringKey = "APPLICATIONINSIGHTS_CONNECTION_STRING";
+
 
     public static void ConfigureOpenTelemetry(this IServiceCollection services)
     {
         services.AddOptions<AzureMcpServerConfiguration>()
-            .Configure(options =>
+            .Configure<IConfiguration>((options, configuration) =>
             {
                 var entryAssembly = Assembly.GetEntryAssembly();
                 var assemblyName = entryAssembly?.GetName() ?? new AssemblyName();
@@ -35,20 +39,41 @@ public static class OpenTelemetryExtensions
                     options.Version = assemblyName.Version.ToString();
                 }
 
-                var collectTelemetry = Environment.GetEnvironmentVariable("AZURE_MCP_COLLECT_TELEMETRY");
+                var collectTelemetry = configuration[AzureMcpCollectTelemetryKey];
 
-                options.IsTelemetryEnabled = string.IsNullOrEmpty(collectTelemetry)
-                    || (bool.TryParse(collectTelemetry, out var shouldCollect) && shouldCollect);
-
-                if (options.IsTelemetryEnabled)
+                if (string.IsNullOrEmpty(collectTelemetry))
                 {
-                    var address = NetworkInterface.GetAllNetworkInterfaces()
+                    options.IsTelemetryEnabled = true;
+                }
+                else if (bool.TryParse(collectTelemetry, out var shouldCollect))
+                {
+                    options.IsTelemetryEnabled = shouldCollect;
+                }
+                else if (int.TryParse(collectTelemetry, out var integerResult))
+                {
+                    options.IsTelemetryEnabled = integerResult != 0;
+                }
+                else
+                {
+                    options.IsTelemetryEnabled = true;
+                }
+
+                if (!options.IsTelemetryEnabled)
+                {
+                    return;
+                }
+
+                var address = NetworkInterface.GetAllNetworkInterfaces()
                     .Where(x => x.OperationalStatus == OperationalStatus.Up)
                     .Select(x => x.GetPhysicalAddress().ToString())
                     .FirstOrDefault(string.Empty);
 
-                    options.MacAddressHash = Sha256Helper.GetHashedValue(address);
-                }
+                options.MacAddressHash = Sha256Helper.GetHashedValue(address);
+
+                var instrumentationKey = configuration[AppInsightsConnectionStringKey];
+                options.AppInsightsInstrumentationKey = string.IsNullOrEmpty(instrumentationKey)
+                    ? DefaultAppInsights
+                    : instrumentationKey;
             });
 
         services.AddSingleton<ITelemetryService, TelemetryService>();
@@ -70,13 +95,6 @@ public static class OpenTelemetryExtensions
         });
 #endif
 
-        var appInsightsConnectionString = Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING");
-
-        if (string.IsNullOrEmpty(appInsightsConnectionString))
-        {
-            appInsightsConnectionString = DefaultAppInsights;
-        }
-
         services.ConfigureOpenTelemetryTracerProvider((sp, builder) =>
         {
             var serverConfig = sp.GetRequiredService<IOptions<AzureMcpServerConfiguration>>();
@@ -88,6 +106,20 @@ public static class OpenTelemetryExtensions
             builder.AddSource(serverConfig.Value.Name);
         });
 
+        services.AddOptions<AzureMonitorExporterOptions>()
+            .Configure<IOptions<AzureMcpServerConfiguration>>((options, telemetryConfig) =>
+            {
+                if (!telemetryConfig.Value.IsTelemetryEnabled)
+                {
+                    return;
+                }
+
+                options.EnableLiveMetrics = true;
+                options.Diagnostics.IsLoggingEnabled = true;
+                options.Diagnostics.IsLoggingContentEnabled = true;
+                options.ConnectionString = telemetryConfig.Value.AppInsightsInstrumentationKey;
+            });
+
         services.AddOpenTelemetry()
             .ConfigureResource(r =>
             {
@@ -95,15 +127,6 @@ public static class OpenTelemetryExtensions
 
                 r.AddService("azmcp", version)
                     .AddTelemetrySdk();
-            })
-            .UseAzureMonitorExporter(options =>
-            {
-#if DEBUG
-                options.EnableLiveMetrics = true;
-                options.Diagnostics.IsLoggingEnabled = true;
-                options.Diagnostics.IsLoggingContentEnabled = true;
-#endif
-                options.ConnectionString = appInsightsConnectionString;
             });
 
         return true;
